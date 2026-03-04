@@ -1,5 +1,6 @@
+import PokemonCard from "@/components/PokemonCard";
 import { useEffect, useState } from "react";
-import { Text, View } from "react-native";
+import { View } from "react-native";
 
 export default function Index() {
   const [result, setResult] = useState<any[]>([]);
@@ -30,7 +31,13 @@ export default function Index() {
   return (
     <View>
       {result.map((item) => {
-        return <Text key={item.name}>{item.name}</Text>;
+        return (
+          <PokemonCard
+            key={item.name}
+            name={item.name}
+            url={item.url}
+          ></PokemonCard>
+        );
       })}
     </View>
   );
