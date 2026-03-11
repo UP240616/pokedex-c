@@ -1,9 +1,15 @@
 import PokemonCard from "@/components/PokemonCard";
 import { useEffect, useState } from "react";
-import { ScrollView } from "react-native";
+import { ScrollView, StyleSheet, TextInput } from "react-native";
+
+interface Pokemon {
+  name: string;
+  url: string;
+}
 
 export default function Index() {
-  const [result, setResult] = useState<any[]>([]);
+  const [pokemonList, setPokemonList] = useState<Pokemon[]>([]);
+  const [result, setResult] = useState<Pokemon[]>([]);
 
   useEffect(() => {
     console.log("Entre en pantalla");
@@ -20,6 +26,7 @@ export default function Index() {
       if (response.ok) {
         const data = await response.json();
         setResult(data.results);
+        setPokemonList(data.results);
       } else {
         console.log("Bard Request");
       }
@@ -27,9 +34,19 @@ export default function Index() {
       console.log("Ocurrió un error");
     }
   };
-
+  const filterPokemon = (text: string) => {
+    const arrayFilter = pokemonList.filter((pokemon) =>
+      pokemon.name.toLowerCase().includes(text.toLowerCase()),
+    );
+    setResult(arrayFilter);
+  };
   return (
     <ScrollView>
+      <TextInput
+        style={styles.text}
+        onChangeText={filterPokemon}
+        placeholder="Busca tu Pokemon"
+      ></TextInput>
       {result.map((item) => {
         return (
           <PokemonCard
@@ -42,3 +59,11 @@ export default function Index() {
     </ScrollView>
   );
 }
+const styles = StyleSheet.create({
+  text: {
+    borderRadius: 5,
+    backgroundColor: "gray",
+    width: 500,
+    height: 30,
+  },
+});
